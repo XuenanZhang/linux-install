@@ -23,7 +23,7 @@ load_mode()
     if [ -s ${root_dir}/include/${mode}/${mode}.sh ];then
         log_title "start install ${mode} ..."
         mode_dir=${root_dir}/include/${mode}
-        # . ${mode_dir}/${mode}.sh
+        . ${mode_dir}/${mode}.sh
     else
         log_fatal "${mode}.sh 文件不存在!"        
     fi
@@ -56,7 +56,7 @@ main()
     title_info
     display_os_info
 
-    # 检测
+    # 检测 目前只支持centos
     if [ ${os} != ${OS_CentOS} ]; then
         log_fatal "os(${os}) no support!!"
     fi
