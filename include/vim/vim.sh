@@ -3,7 +3,7 @@
 install ctags cscope
 
 #:<<?
-log_info "升级vim8.0"
+log_info "升级最新版vim"
 install ncurses-devel
 download https://github.com/vim/vim/archive/master.zip
 unzip master.zip
