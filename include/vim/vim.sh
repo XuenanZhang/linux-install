@@ -54,6 +54,7 @@ cmake ./
 make all && sudo make install && make check && sudo make package
 ?
 
+log_info "安装vim插件"
 cd ${mode_dir}
 cp -f .vimrc .vimrc.before .vimrc.plugin .agignore .ycm_extra_conf.py ~
 cp -rf .vim ~
