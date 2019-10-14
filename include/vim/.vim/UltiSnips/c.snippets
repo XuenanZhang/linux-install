@@ -1,0 +1,145 @@
+
+snippet #h
+#ifndef ${1}
+#define $1 
+
+
+#endif /* $1 */
+endsnippet
+
+snippet #i
+#include "${1}"
+endsnippet
+
+snippet #in
+#include <${1}>
+endsnippet
+
+snippet stt
+typedef struct _$1
+{
+
+} ${1};
+endsnippet
+
+snippet for
+for (int ${1:i} = 0; $1 < ${2:count}; ++$1) 
+{   
+	${3}
+}   
+endsnippet
+
+snippet foru
+for (uint32 ${1:i} = 0; $1 < ${2:count}; ++$1) 
+{   
+	${3}
+}   
+endsnippet
+
+snippet fors
+for (size_t ${1:i} = 0; $1 < ${2:count}; ++$1) 
+{   
+	${3}
+}   
+endsnippet
+
+snippet switch
+switch (${1:val})
+{
+	case ${2}:
+		{
+			${3}
+		}
+		break;
+	${4}
+}
+endsnippet
+
+snippet switchd
+switch (${1:val})
+{
+	case ${2}:
+		{
+			${3}
+		}
+		break;
+	default:
+		{
+
+		}
+		break;
+}
+endsnippet
+
+snippet case
+case ${1}:
+	{
+		${2}
+	}
+	break;
+${3}
+endsnippet
+
+snippet if
+if (${1})
+{
+	${2}
+}
+endsnippet
+
+snippet ife
+if (${1})
+{
+	${2}
+}
+else
+{
+	${3}
+}
+endsnippet
+
+snippet el
+else 
+{
+	${1}
+}
+endsnippet
+
+snippet eif
+else if (${1})
+{
+	${2}
+}
+endsnippet
+
+snippet /*
+/**
+  ${1}
+
+  @param ${2}
+  @return ${3}
+ */
+endsnippet
+
+snippet //*
+/**
+  ${1}
+ */
+${2}
+endsnippet
+
+snippet /**
+/** ${1} **/
+endsnippet
+
+snippet ///
+//---------------------------------------------------------------------------------
+// ${1}
+//---------------------------------------------------------------------------------
+endsnippet
+
+snippet //
+//-----------------------------------------------------------------------------
+// ${1}
+//-----------------------------------------------------------------------------
+endsnippet

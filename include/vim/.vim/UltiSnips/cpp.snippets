@@ -1,0 +1,50 @@
+# ifndef ${1}`!p snip.rv="""_H_{0}""".format(snip.basename)`
+
+extends c
+
+snippet struct
+struct ${1:st_name}
+{
+	$1(){};
+	~$1(){};
+};
+endsnippet
+
+
+snippet class
+class ${1:class_name}
+{
+public:
+	$1(){};
+	~$1(){};
+
+private:
+};
+endsnippet
+
+snippet iterv
+for (std::vector<${1:type}>::iterator ${2:iter} = ${3:container}.begin(); $2 != $3.end(); ++$2) 
+{   
+	${4}
+}  
+endsnippet
+
+snippet iterm
+for (std::map<${1:key}, ${2:val}>::iterator ${3:iter} = ${4:container}.begin(); $3 != $4.end(); ++$3) 
+{   
+	${5}
+}  
+endsnippet
+
+snippet iterl
+for (std::list<${1:type}>::iterator ${2:iter} = ${3:container}.begin(); $2 != $3.end(); ++$2) 
+{   
+	${4}
+}  
+endsnippet
+
+
+
+
+
+

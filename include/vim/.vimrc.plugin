@@ -1,0 +1,861 @@
+" ==========================================
+" plugin 插件管理和配置项
+" ==========================================
+
+set nocompatible                 "非兼容vi模式,避免以前版本的一些bug和局限
+filetype off 			"文件类型自动检测功能  
+
+if !exists('g:my_plugin_groups')
+    " let g:my_plugin_groups=['general', 'cpp', 'python', 'shell']
+    let g:my_plugin_groups=['general', 'cpp', 'shell']
+endif
+
+" ----------------------------------------------------------------------------
+" 使用 vim-plug 管理插件
+" ----------------------------------------------------------------------------
+" My_PluginExist {{{
+function My_PluginExist(name)
+    if has_key(g:plugs, a:name)
+        return 1
+    endif
+endfunction
+"}}}
+
+" My_Build_Plugin {{{
+function! My_Build_Plugin(info)
+    " info is a dictionary with 3 fields
+    " - name:   name of the plugin
+    " - status: 'installed', 'updated', or 'unchanged'
+    " - force:  set on PlugInstall! or PlugUpdate
+    echom a:info.status
+    echom a:info.name
+    if a:info.status == 'installed' || a:info.force
+        if a:info.name == "YouCompleteMe"
+            silent exec "!./install.py --all"
+        endif
+    endif
+endfunction
+"}}}
+
+call plug#begin('~/.vim/bundle')
+
+" General {{
+    if count(g:my_plugin_groups, 'general')
+        "主题
+        Plug 'tomasr/molokai'
+        Plug 'altercation/vim-colors-solarized'
+        Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+        
+        " ctrl家族
+        Plug 'kien/ctrlp.vim' 
+        Plug 'tacahiroy/ctrlp-funky'
+        Plug 'dyng/ctrlsf.vim'
+        
+        " 模糊搜索神器
+        Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
+
+        " 无敌插件
+        " Plug 'Valloric/YouCompleteMe', { 'do': function('My_Build_Plugin') }
+        Plug 'Valloric/YouCompleteMe' ", { 'do': './install.py --all' }
+        " 语法检测
+        Plug 'w0rp/ale'
+        " 代码片段快速插入 
+        Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
+
+        "git
+        Plug 'tpope/vim-fugitive'
+
+
+        " 注释专用
+        Plug 'scrooloose/nerdcommenter'
+        " 快速跳转
+        Plug 'easymotion/vim-easymotion'
+        " 选中扩大
+        Plug 'terryma/vim-expand-region'
+        " 补全括号之类
+        Plug 'Raimondi/delimitMate' 
+        " 重复上一次操作
+        Plug 'tpope/vim-repeat'
+        " 添加替换各种环绕符号
+        Plug 'tpope/vim-surround'
+        " 快速赋值语句对齐
+        Plug 'junegunn/vim-easy-align'
+        " 多光标选中编辑
+        Plug 'terryma/vim-multiple-cursors'
+        " 括号显示增强
+        Plug 'kien/rainbow_parentheses.vim'
+        " 导航
+        Plug 'scrooloose/nerdtree' | Plug 'jistr/vim-nerdtree-tabs'
+        " 当前结构信息
+        Plug 'majutsushi/tagbar'
+
+        " text object  123(4|5)6  di) da) vi)
+        " 支持自定义文本对象 
+        Plug 'kana/vim-textobj-user'
+        " 增加行文本对象: l   dal yal cil
+        Plug 'kana/vim-textobj-line'
+        " 增加文件文本对象: e   dae yae cie
+        "Plug 'kana/vim-textobj-entire'
+        " 增加缩进文本对象: i   dai yai cii - 相同缩进属于同一块
+        Plug 'kana/vim-textobj-indent'
+        " markdown 语法高亮
+        Plug 'plasticboy/vim-markdown', {'for': 'md'}
+        " 模糊搜索
+        Plug 'haya14busa/incsearch.vim' | Plug 'haya14busa/incsearch-fuzzy.vim'
+        "历史操作记录
+        Plug 'mbbill/undotree' 
+        " .h .cpp切换"
+        Plug 'vim-scripts/a.vim' 
+        " 注释
+        Plug 'vim-scripts/DoxygenToolkit.vim' 
+        " 语法高亮
+        Plug 'sheerun/vim-polyglot'
+        " tmux
+        Plug 'christoomey/vim-tmux-navigator'
+
+
+        " 显示marks - 方便自己进行标记和跳转
+        " Plug 'kshenoy/vim-signature'
+    endif
+"}}}
+
+
+" cpp {{
+    if count(g:my_plugin_groups, 'cpp')
+        Plug 'octol/vim-cpp-enhanced-highlight'
+    endif
+"}}}
+
+" pthon {{
+    if count(g:my_plugin_groups, 'python')
+        Plug 'davidhalter/jedi-vim'
+    endif
+"}}}
+
+" shell {{
+    if count(g:my_plugin_groups, 'shell')
+        Plug 'Shougo/vimshell.vim'
+    endif
+"}}}
+
+call plug#end()
+
+
+"插件安装清理
+nnoremap <leader>pi :PlugInstall<CR>
+nnoremap <leader>pu :PlugUpdate<CR>
+nnoremap <leader>pc :PlugClean!<CR>
+
+" ----------------------------------------------------------------------------
+" 插件参数配置
+" ----------------------------------------------------------------------------
+set tags=./tags
+" :h  digraph-table "所有符号
+
+" molokai {{{
+    if My_PluginExist("molokai")
+        " let g:molokai_original = 1
+        " let g:rehash256 = 1
+    endif
+"}}}
+
+" vim-colors-solarized {{{
+    if My_PluginExist("vim-colors-solarized")
+        let g:solarized_termtrans=1
+        let g:solarized_contrast="normal"
+        let g:solarized_visibility="normal"
+        " let g:solarized_termcolors=256
+    endif
+"}}}
+
+" vim-airline {{{
+    if My_PluginExist("vim-airline")
+        let g:airline_powerline_fonts=1        "配置airline使用powerline字体
+        let g:airline_theme='bubblegum'   " distinguismed  bubblegum qwq molokai papercolor
+        let g:airline#extensions#whitespace#enabled = 0
+        let g:airline#extensions#whitespace#symbol = '!'
+        let g:airline_section_b = '%{strftime("%m/%d/%y - %H:%M")} %{fugitive#statusline()}'
+        "set guifont=Consolas\ for\ Powerline\ FixedD:h11
+        if !exists('g:airline_symbols')
+            let g:airline_symbols = {}
+        endif
+        " j old vim-powerline symbols
+        let g:airline_left_sep = '⮀'
+        let g:airline_left_alt_sep = '⮁'
+        let g:airline_right_sep = '⮂'
+        let g:airline_right_alt_sep = '⮃'
+        let g:airline_symbols.branch = '⭠'
+        let g:airline_symbols.readonly = '⭤'"
+        let g:airline_symbols.linenr = '¶'
+        let g:airline#extensions#tabline#enabled = 1
+        let g:airline#extensions#tabline#buffer_nr_show = 1
+        let g:airline#extensions#bufferline#overwrite_variables = 1
+        "let g:airline#extensions#tabline#enabled = 1 " 是否打开tabline
+        
+        nnoremap <A-n> :bn<CR>
+        nnoremap <A-p> :bp<CR>
+        nnoremap <A-d> :bd<CR>
+    endif
+"}}}
+
+" ctrlp.vim' {{{
+    if My_PluginExist("ctrlp.vim")
+        "设置搜索时忽略的文件
+        let g:ctrlp_custom_ignore = {
+            \ 'dir':  '\v[\/](.git|.svn|win_vs)$',
+            \ 'file': '\v\.(exe|so|dll|d|o|out|tar|tar.gz)$',
+            \ }
+        " \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+        let g:ctrlp_working_path_mode=0
+        let g:ctrlp_match_window_bottom=1
+        let g:ctrlp_max_height=25
+        let g:ctrlp_match_window_reversed=0
+        let g:ctrlp_mruf_max=500
+        let g:ctrlp_follow_symlinks=1
+        let g:ctrlp_by_filename = 1 "默认使用全路径搜索，置1后按文件名搜索，准确率会有所提高，可以用<C-d>进行切换
+        let g:ctrlp_line_prefix = '♪ '
+        "调用ag进行搜索提升速度，同时不使用缓存文件
+        if executable('ag')
+            set grepprg=ag\ --nogroup\ --nocolor
+            let g:ctrlp_user_command = 'ag %s -l --nocolor --hidden -g "" '
+            let g:ctrlp_use_caching = 0
+        endif"
+
+        let g:ctrlp_map = '<leader>p'
+        " inoremap <C-p> <ESC>:CtrlP<CR>
+        nnoremap <C-b> :CtrlPBuffer<CR>
+        inoremap <C-b> <ESC>:CtrlPBuffer<CR>
+        noremap <leader><leader>p :CtrlPMRU<CR>
+
+        " ctrlpfunky
+        " ctrlp插件1 - 不用ctag进行函数快速跳转
+        " narrow the list down with a word under cursor
+        "nnoremap <Leader>fu :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+    endif
+"}}}
+
+" ctrlp-funky' {{{
+    if My_PluginExist("ctrlp-funky")
+
+        let g:ctrlp_funky_syntax_highlight = 1
+        let g:ctrlp_extensions = ['funky']
+        let g:ctrlp_funky_matchtype = 'path' "(value: 'line', 'path', 'tabs', 'tabe')
+        let g:ctrlp_funky_multi_buffers = 1
+        let g:ctrlp_funky_sort_by_mru = 1
+        let g:ctrlp_funky_use_cache = 1 "时间戳没有改变则用缓存
+        noremap <silent> <A-m> :CtrlPFunky<CR> 
+        inoremap <silent> <A-m> :CtrlPFunky<CR>
+
+        " ctrlpfunky
+        " ctrlp插件1 - 不用ctag进行函数快速跳转
+        " narrow the list down with a word under cursor
+        noremap <Leader>fu :execute 'CtrlPFunky ' . expand('<cword>')<Cr>
+    endif
+"}}}
+
+" ctrlsf.vim' {{{
+    if My_PluginExist("ctrlsf.vim")
+
+        let g:ctrlsf_ackprg = 'ag'
+        let g:ctrlsf_ignore_dir = ['./win_vs', './release', './log', './map*']
+        let g:ctrlsf_case_sensitive = 'yes' "是否敏感大小写
+        let g:ctrlsf_auto_close = 1
+        let g:ctrlsf_regex_pattern = 1
+        " let g:ctrlsf_populate_qflist = 1
+        " let g:ctrlsf_default_view_mode = 'compact' "quick 窗口模式
+
+        nnoremap <C-f>f :CtrlSF -W <C-R><C-W><CR>
+        vmap     <C-f>f <Plug>CtrlSFVwordExec
+        nnoremap <C-f>i :CtrlSF -W -I ''<left>
+        nnoremap <C-f>o :CtrlSFToggle<CR>
+
+        " nnoremap <Leader>F :CtrlSF -W <C-R><C-W><CR>
+        " nnoremap <C-F>k :CtrlSFQuickfix <C-R><C-W><CR>
+
+        " nnoremap <C-F>f :CtrlSF ''<left>
+        " nmap <C-F>i :CtrlSF -W -I ''<ESC>h
+        " imap <C-F>f <ESC>;:CtrlSF <C-R><C-W><CR>
+        " imap <C-F><Space> <ESC>;:CtrlSF 
+        " imap <C-F>i <ESC>;:CtrlSF -ignorecase 
+        " imap <C-F>o <ESC>;:CtrlSFToggle<CR>
+
+        " let g:ctrlsf_position = 'below'
+        " let g:ctrlsf_winsize = '30%'
+        " Note: cannot use <CR> or <C-m> for open
+        " Use : <sapce> or <tab>
+        let g:ctrlsf_mapping = {
+            \ "open"  : "<Enter>",
+            \ "openb" : "O",
+            \ "tab"   : "t",
+            \ "tabb"  : "T",
+            \ "prevw" : "p",
+            \ "quit"  : "q",
+            \ "next"  : "<C-J>",
+            \ "prev"  : "<C-K>",
+            \ "pquit" : "q",
+            \ }
+    endif
+"}}}
+
+" fzf.vim {{{
+    if My_PluginExist("fzf.vim")
+        command! -bang -nargs=* Agws call fzf#vim#ag(<q-args>, "-ws", <bang>0)
+
+        nnoremap <C-p> :FZF<cr>
+        vnoremap <C-p> <ESC>:FZF<cr>
+        inoremap <C-p> <ESC>:FZF<cr>
+        
+        nnoremap <A-m> :BTags<cr>
+        inoremap <A-m> <ESc>:BTags<cr>
+        vnoremap <A-m> <ESc>:BTags<cr>
+
+        " nnoremap <leader>f :Ag -ws <C-R><C-W><cr>
+        nnoremap <leader>f :Agws <C-R><C-W><cr>
+        nnoremap <leader>F :Ag <cr>
+        nnoremap <leader><leader>F :Agws <cr>
+
+        nnoremap <leader>m :BLines <cr>
+        nnoremap <leader>H :History <cr>
+
+        let g:fzf_colors =
+            \ { 'fg':    ['fg', 'Normal'],
+            \ 'bg':      ['bg', 'Normal'],
+            \ 'hl':      ['fg', 'Comment'],
+            \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+            \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+            \ 'hl+':     ['fg', 'Statement'],
+            \ 'info':    ['fg', 'PreProc'],
+            \ 'border':  ['fg', 'Ignore'],
+            \ 'prompt':  ['fg', 'Conditional'],
+            \ 'pointer': ['fg', 'Exception'],
+            \ 'marker':  ['fg', 'Keyword'],
+            \ 'spinner': ['fg', 'Label'],
+            \ 'header':  ['fg', 'Comment'] }
+    endif
+"}}}
+
+" YouCompleteMe {{{
+    if My_PluginExist("YouCompleteMe")
+        "上下左右键的行为 会显示其他信息
+        " inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
+        " inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
+        " inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
+        " inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
+        " 跳转到定义处
+        nnoremap <Leader><Leader>g :YcmCompleter GoToDefinitionElseDeclaration<CR>
+        nnoremap <F6> :YcmForceCompileAndDiagnostics<CR>	"force recomile with syntastic
+        " nnoremap <leader><leader>g :YcmCompleter GoToDeclaration<CR>
+        nnoremap <leader><leader>fg :YcmCompleter GoToDefinition<CR>
+        " nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+        nnoremap <leader>lo :lopen<CR>	"open locationlist
+        nnoremap <leader>lc :lclose<CR>	"close locationlist
+        " inoremap <leader><leader><leader> <C-x><C-o>
+
+        " let g:syntastic_cpp_compiler = 'g++'
+        " let g:syntastic_cpp_compiler_options = '-std=c++11 -stdlib=libc++'
+        " let g:clang_user_options='-stdlib=libc++ -std=c++11'
+        " let g:clang_complete_auto=1
+
+        let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+        " let g:ycm_global_ycm_extra_conf = '~/.vim/.ycm_extra_conf.py'
+        " 不显示开启vim时检查ycm_extra_conf文件的信息  
+        let g:ycm_confirm_extra_conf=0
+        " 开启基于tag的补全，可以在这之后添加需要的标签路径  
+        let g:ycm_collect_identifiers_from_tags_files=1
+        "注释和字符串中的文字也会被收入补全
+        let g:ycm_collect_identifiers_from_comments_and_strings = 0
+        " 输入第2个字符开始补全
+        let g:ycm_min_num_of_chars_for_completion=2
+        " 禁止缓存匹配项,每次都重新生成匹配项
+        let g:ycm_cache_omnifunc=0
+        " 开启语义补全
+        let g:ycm_seed_identifiers_with_syntax=1	
+        "在注释输入中也能补全
+        let g:ycm_complete_in_comments = 1
+        "在字符串输入中也能补全
+        let g:ycm_complete_in_strings = 1
+        " 设置在下面几种格式的文件上屏蔽ycm
+        let g:ycm_filetype_blacklist = {
+            \ 'tagbar' : 1,
+            \ 'nerdtree' : 1,
+            \}
+        "youcompleteme  默认tab  s-tab 和 ultisnips 冲突
+        let g:ycm_key_list_select_completion = ['<c-j>', '<Down>']
+        let g:ycm_key_list_previous_completion = ['<c-k>', '<Up>']
+        let g:ycm_key_list_stop_completion = ['<CR>']
+        " 修改对C函数的补全快捷键，默认是CTRL + space，修改为ALT + ;
+        let g:ycm_key_invoke_completion = '<A-,>'
+        let g:ycm_register_as_syntastic_checker = 0
+        " 开启实时错误或者warning的检测
+        let g:ycm_show_diagnostics_ui = 0
+        " let g:ycm_add_preview_to_completeopt = 0    " 关闭补全预览  
+        let g:ycm_error_symbol = '>>'  "set error or warning signs  
+        let g:ycm_warning_symbol = '>*'
+
+        "highlight YcmErrorSign       标记颜色  
+        "highlight YcmWarningSign ctermbg=none  
+        "highlight YcmErrorSection      代码中出错字段颜色  
+        "highlight YcmWarningSection ctermbg=none  
+        "highlight YcmErrorLine        出错行颜色  
+        "highlight YcmWarningLine  
+
+        function! g:UltiSnips_Complete()
+            call UltiSnips#ExpandSnippet()
+            if g:ulti_expand_res == 0
+                if pumvisible()
+                    return "\<C-n>"
+                else
+                    call UltiSnips#JumpForwards()
+                    if g:ulti_jump_forwards_res == 0
+                    return "\<TAB>"
+                    endif
+                endif
+            endif
+            return ""
+        endfunction
+
+        " au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+
+        " Expand snippet or return
+        let g:ulti_expand_res = 1
+        function! Ulti_ExpandOrEnter()
+            call UltiSnips#ExpandSnippet()
+            if g:ulti_expand_res
+                return ''
+            else
+                return "\<return>"
+        endfunction
+
+        " Set <space> as primary trigger
+        " inoremap <return> <C-R>=Ulti_ExpandOrEnter()<CR>
+    endif
+"}}}
+
+" ale {{{
+    if My_PluginExist("ale")
+        "始终开启标志列
+        let g:ale_sign_column_always = 1
+        let g:ale_set_highlights = 1
+        let g:ale_sign_column_always = 1
+        let g:ale_open_list = 0
+        "文件内容发生变化时不进行检查
+        let g:ale_lint_on_text_changed = 'never'
+        ""打开文件时不进行检查
+        let g:ale_lint_on_enter = 0
+        let g:airline#extensions#ale#enabled = 1
+        "对C/C++使用Clang进行语法检查
+        let g:ale_linters = {
+            \ 'c': ['clang'], 
+            \ 'c++': ['clang++'],
+            \ 'cpp': ['clang++'],
+            \ 'python': ['flake8'],
+            \ 'bash': ['shellcheck'],
+            \}
+        "GameServer
+        " let aledir_lib = ' -I'.join(split(globpath('./lib', '**/*/'), '\n'),' -I')
+        let aledir_lib = ' -I./lib' . '-I./' . ' -I./include' . ' -I/home/zxn/work/gateway_master/common/exosip/libeXosip2-5.0.0/include' . ' -I/home/zxn/work/gateway_master/common/exosip/libosip2-5.0.0/include' . ' -I/home/zxn/work/gateway_master/common/libconhash' . ' -I/usr/include/libxml2/' . ' -I/home/zxn/work/gateway_master/common/curl-7.22.0/include/curl' 
+        let aledir_server = ' -I/home/zxn/work/gateway_master/sourcer/x_type' . ' -I./x_type' . ' -I/home/zxn/work/gateway_master/sourcer' . ' -I/home/zxn/work/gateway_master/sourcer/gateway_28181/'. ' -I./gateway_28181' . ' -I/home/zxn/work/gateway_master/sourcer/sdk_interface' . ' -I./sdk_interface' . ' -I/home/zxn/work/gateway_master/sourcer/log_manager'. ' -I./log_manager' . ' -I/home/zxn/work/gateway_master/sourcer/media'. ' -I./media' . ' -I/home/zxn/work/gateway_master/sourcer/ms' . ' -I./ms' . ' -I/home/zxn/work/gateway_master/sourcer/sip_manager' . ' -I./sip_manager' . ' -I/home/zxn/work/gateway_master/sourcer/vs' . ' -I./vs' . ' -I/home/zxn/work/gateway_master/sourcer/json' . ' -I./json' . ' -I./sip_manager' . ' -I./libos' . ' -I/home/zxn/work/gateway_master/sourcer/clientsdk' . ' -I./clientsdk'
+        let aledir_other = ''
+        let aledir_all = ' ' . aledir_lib . aledir_server . aledir_other
+        " let ale_warn = ' -Wall -Wcast-qual -Wshadowl -Wunreachable-code -Winline'
+        let ale_warn = ' '
+
+        let g:ale_c_clang_options = ale_warn . aledir_all
+        let g:ale_cpp_clang_options = '-std=c++11 ' . ale_warn . aledir_all
+
+        " let g:ale_cpp_clangcheck_options = '-std=c++11 -Wall -I./gssdk -I./gsserver -I./Detour/Include -I./gsproto -I./gsproto/gsclient -I./gsdefine'
+        " let g:ale_cpp_clang_options = '-std=c++11 -Wall -I./gssdk -I./gsserver -I./Detour/Include -I./gsproto -I./gsproto/gsclient -I./gsdefine '
+        " let g:ale_cpp_gcc_options = '-std=c++11 -Wall -I./gssdk -I./gsserver -I./Detour/Include -I./gsproto -I./gsproto/gsclient -I./gsdefine '
+
+        "自定义error和warning图标
+        let g:ale_sign_error = '✘'
+        let g:ale_sign_warning = '»'
+        "在vim自带的状态栏中整合ale
+        let g:ale_echo_msg_format = '[#%linter%#] %s [%severity%]'
+        " let g:ale_statusline_format = ['E•%d', 'W•%d', 'OK']
+        let g:ale_statusline_format = ['✘ %d', '» %d', '✔ OK']
+        "显示Linter名称,出错或警告等相关信息
+        " let g:ale_echo_msg_error_str = 'E'
+        " let g:ale_echo_msg_warning_str = 'W'
+        " let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+        " let g:ale_echo_msg_format = '%linter% says %s'
+        "普通模式下，sp前往上一个错误或警告，sn前往下一个错误或警告
+        nnoremap <leader>an :ALENextWrap<cr>
+        nnoremap <Leader>ep <Plug>(ale_previous_wrap)
+        nnoremap <Leader>en <Plug>(ale_next_wrap)
+        "<Leader>s触发/关闭语法检查
+        nnoremap <Leader>er :ALEToggle<CR>
+        "<Leader>d查看错误或警告的详细信息
+        nnoremap <Leader>es :ALEDetail<CR>
+        " troggle quickfix list
+        function! ToggleErrors()
+            let old_last_winnr = winnr('$')
+            lclose
+            if old_last_winnr == winnr('$')
+                " Nothing was closed, open syntastic_error location panel
+                lopen
+            endif
+        endfunction
+        nnoremap <Leader>ee :call ToggleErrors()<cr>
+        nnoremap <leader>ag :ALEGoToDefinition<cr>
+        " highlight clear ALEErrorSign
+        " highlight clear ALEWarningSign
+    endif
+"}}}
+
+" ultisnips {{{
+    if My_PluginExist("ultisnips")
+        let g:UltiSnipsExpandTrigger       = "<tab>"
+        let g:UltiSnipsJumpForwardTrigger  = "<leader>s"
+        let g:UltiSnipsJumpBackwardTrigger = "<leader>S"
+        let g:UltiSnipsListSnippets        = "<leader><leader>us"
+        let g:UltiSnipsSnippetDirectories  = ['UltiSnips']
+        let g:UltiSnipsSnippetsDir         = '~/.vim/UltiSnips'
+        " 定义存放代码片段的文件夹 .vim/UltiSnips下，使用自定义和默认的，将会的到全局，有冲突的会提示
+        " 进入对应filetype的snippets进行编辑
+        noremap <leader>us :UltiSnipsEdit<CR>
+
+        " ctrl+j/k 进行选择
+        func! g:JInYCM()
+            if pumvisible()
+                return "\<C-n>"
+            else
+                return "\<c-j>"
+            endif
+        endfunction
+
+        func! g:KInYCM()
+            if pumvisible()
+                return "\<C-p>"
+            else
+                return "\<c-k>"
+            endif
+        endfunction
+        " inoremap <c-j> <c-r>=g:JInYCM()<cr>
+        " au BufEnter,BufRead * exec "inoremap <silent> " . g:UltiSnipsJumpBackwordTrigger . " <C-R>=g:KInYCM()<cr>"
+        " let g:UltiSnipsJumpBackwordTrigger = "<c-k>"
+    endif
+" }}}
+
+" vim-fugitive {{{
+    if My_PluginExist("vim-fugitive")
+        nnoremap <leader>Gs :Gstatus<CR>
+        nnoremap <leader>Gl :Git! log --stat<CR>
+        " nnoremap <leader>Gl :git log --graph --pretty=format:"%h - %an, %ad %ar: %s"<CR>
+        nnoremap <leader>Gd :Gdiff<CR>
+        nnoremap <leader>Gw :Gwrite<CR>
+        nnoremap <leader>Gb :Gblame<CR>
+        nnoremap <leader>Gll :Gpull<CR>
+        nnoremap <leader>Ghh :Gpush<CR>
+    endif
+"}}}
+
+" nerdcommenter {{{
+    if My_PluginExist("nerdcommenter")
+        let g:NERDSpaceDelims=1 "注释的时候自动加个空格, 强迫症必配
+        let g:NERDCompactSexyComs = 1 "多行注释
+        "使用：  
+        "1、 \cc 注释当前行和选中行  
+        "2、 \cn 没有发现和\cc有区别  
+        "3、 \c<空格> 如果被选区域有部分被注释，则对被选区域执行取消注释操作，其它情况执行反转注释操作  
+        "4、 \cm 对被选区域用一对注释符进行注释，前面的注释对每一行都会添加注释  
+        "5、 \ci 执行反转注释操作，选中区域注释部分取消注释，非注释部分添加注释  
+        "6、 \cs 添加性感的注释，代码开头介绍部分通常使用该注释  
+        "7、 \cy 添加注释，并复制被添加注释的部分  
+        "8、 \c$ 注释当前光标到改行结尾的内容  
+        "9、 \cA 跳转到该行结尾添加注释，并进入编辑模式  
+        "10、\ca 转换注释的方式，比如： /**/和//  
+        "11、\cl \cb 左对齐和左右对其，左右对其主要针对/**/  
+        "12、\cu 取消注释  0
+    endif
+"}}}
+
+" vim-easymotion {{{
+    if My_PluginExist("vim-easymotion")
+        let g:EasyMotion_smartcase = 1
+        "建议简单化, 一个<Leader><leader>w/b走天下.
+        " nmap <Leader><leader>h <Plug>(easymotion-linebackward)
+        " nmap <Leader><Leader>j <Plug>(easymotion-j)
+        " nmap <Leader><Leader>k <Plug>(easymotion-k)
+        " nmap <Leader><leader>l <Plug>(easymotion-lineforward)
+        nmap J <Leader><Leader>w
+        nmap K <Leader><Leader>b
+        " map <Leader><leader>. <Plug>(easymotion-repeat)
+    endif
+"}}}
+
+" vim-expand-region {{{
+    if My_PluginExist("vim-expand-region")
+        " Extend the global default
+        if exists("*expand_region#custom_text_objects")
+            call expand_region#custom_text_objects({
+            \ 'a]' :1,
+            \ 'ab' :1,
+            \ 'aB' :1,
+            \ 'ii' :0,
+            \ 'ai' :0,
+            \ })
+        endif
+        vmap v <Plug>(expand_region_expand)
+        vmap V <Plug>(expand_region_shrink)
+    endif
+"}}}
+
+" vim-surround {{{
+    if My_PluginExist("vim-surround")
+        " nnoremap <leader>l :ySS
+        " # 替换: cs^'
+        " ^Hello world!^ -> 'Hello world!'
+
+        " # 替换-标签(t=tag): cst'
+        " <a>abc</a>  -> 'abc'
+
+        " cst<html>
+        " <a>abc</a>  -> <html>abc</html>
+
+        " # 删除: ds'
+        " 'Hello world!' -> Hello world!
+
+        " # 添加(ys=you surround): ysiw'
+        " Hello -> 'Hello'
+
+        " # 添加: csw'
+        " Hello -> 'Hello'
+
+        " # 添加-整行: yss'
+        " Hello world -> 'Hello world'
+
+        " # ySS@
+        " Hello world ->
+        "    @
+        "    hello world
+        "    @
+        "
+        "    # 添加-两个词: veeS'
+        "    hello world -> 'hello world'
+        "
+        "    # 添加-当前到行尾: ys$'
+        "
+        "    # 左符号/右符号 => 带不带空格
+        "    cs([
+        "    (hello) -> [ hello ]
+        "
+        "    cs()]
+        "    (hello) -> [hello])
+    endif
+"}}}
+
+" vim-easy-align {{{
+    if My_PluginExist("vim-easy-align")
+        nmap ga <Plug>(EasyAlign)ip
+        vmap ga <Plug>(EasyAlign)
+    endif
+"}}}
+
+" vim-multiple-cursors {{{
+    if My_PluginExist("vim-multiple-cursors")
+        let g:multi_cursor_select_all_word_key = '<A-N>'    
+    endif
+"}}}
+"
+" rainbow_parentheses {{{
+    if My_PluginExist("rainbow_parentheses.vim")
+
+        " 不加入这行, 防止黑色括号出现, 很难识别
+        " \ ['black',       'SeaGreen3'],
+        let g:rbpt_colorpairs = [
+            \ ['brown',       'RoyalBlue3'],
+            \ ['Darkblue',    'SeaGreen3'],
+            \ ['darkgray',    'DarkOrchid3'],
+            \ ['darkgreen',   'firebrick3'],
+            \ ['darkcyan',    'RoyalBlue3'],
+            \ ['darkred',     'SeaGreen3'],
+            \ ['darkmagenta', 'DarkOrchid3'],
+            \ ['brown',       'firebrick3'],
+            \ ['gray',        'RoyalBlue3'],
+            \ ['darkmagenta', 'DarkOrchid3'],
+            \ ['Darkblue',    'firebrick3'],
+            \ ['darkgreen',   'RoyalBlue3'],
+            \ ['darkcyan',    'SeaGreen3'],
+            \ ['darkred',     'DarkOrchid3'],
+            \ ['red',         'firebrick3'],
+            \ ]
+
+        let g:rbpt_max = 16
+        let g:rbpt_loadcmd_toggle = 0
+        au VimEnter * RainbowParenthesesToggle
+        au Syntax * RainbowParenthesesLoadRound
+        au Syntax * RainbowParenthesesLoadSquare
+        au Syntax * RainbowParenthesesLoadBraces
+    endif
+"}}}
+
+" nerdtree {{{
+    if My_PluginExist("nerdtree")
+        let NERDTreeHighlightCursorline=1 "显示行号
+        let NERDTreeAutoCenter=1
+        let NERDTreeShowHidden=0 "是否显示隐藏文件"
+        let NERDTreeWinSize=30 "设置宽度"
+        let NERDTreeIgnore=[ '\.d','\.o','\~$','\.swp', '\.pyc$', '\.pyo$', '\.obj$', '\.o$', '\.so$', '\.egg$', '^\.git$', '^\.svn$', '^\.hg$' ]
+        autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | end "当NERDTree为剩下的唯一窗口时自动关闭
+        " s/v 分屏打开文件
+        let g:NERDTreeMapOpenSplit = 's'
+        let g:NERDTreeMapOpenVSplit = 'v'
+
+        map <A-e> <plug>NERDTreeTabsToggle<CR>
+        " 关闭同步
+        " let g:nerdtree_tabs_synchronize_view=0
+        " let g:nerdtree_tabs_synchronize_focus=0
+        " 是否自动开启nerdtree
+        " thank to @ListenerRi, see https://github.com/wklken/k-vim/issues/165
+        let g:nerdtree_tabs_open_on_console_startup=0
+        let g:nerdtree_tabs_open_on_gui_startup=0
+    endif
+"}}}
+
+" tagbar {{{
+    if My_PluginExist("tagbar")
+        let g:tagbar_autofocus = 1
+        let g:tagbar_autoshowtag = 1
+        " let g:tagbar_show_visibility = 1
+        let g:tagbar_autoclose = 1
+        let g:tagbar_width = 40
+        noremap <silent> <A-M> :TagbarToggle<CR>
+        inoremap <silent> <A-M> :TagbarToggle<CR>
+    endif
+"}}}
+
+" incsearch {{{
+    if My_PluginExist("incsearch")
+        map /  <Plug>(incsearch-forward)
+        map ?  <Plug>(incsearch-backward)
+        map g/ <Plug>(incsearch-stay)
+        map z/ <Plug>(incsearch-fuzzy-/)
+        map z? <Plug>(incsearch-fuzzy-?)
+        map zg/ <Plug>(incsearch-fuzzy-stay)
+    endif
+"}}}
+
+" undotree {{{
+    if My_PluginExist("undotree")
+        ":earlier and :later
+        set undodir=~/.undodir/
+        set undofile
+        let g:undotree_SetFocusWhenToggle = 1
+        ""let g:undotree_TreeNodeShape = '->'
+        nnoremap <leader>ut :UndotreeToggle<cr>
+    endif
+"}}}
+
+" a.vim {{{
+    if My_PluginExist("a.vim")
+        nnoremap <A-A> :A<CR>
+        inoremap <A-A> :A<CR>
+    endif
+"}}}
+
+" DoxygenToolkit {{{
+    if My_PluginExist("DoxygenToolkit")
+        inoremap <A-V> <ESC>:Dox<CR>
+        noremap <A-V> :Dox<CR>
+        inoremap <A-v> /**  **/<left><left><left><left>
+        inoremap <A-v> /**  **/<left><left><left><left>
+        let g:DoxygenToolkit_briefTag_pre="@Synopsis  "
+        let g:DoxygenToolkit_paramTag_pre="@Param "
+        let g:DoxygenToolkit_returnTag="@Returns   "
+        let g:DoxygenToolkit_blockHeader="--------------------------------------------------------------------------"
+        let g:DoxygenToolkit_blockFooter="----------------------------------------------------------------------------"
+        let g:DoxygenToolkit_authorName="Mathias Lorente"
+        let g:DoxygenToolkit_licenseTag="My own license"
+    endif
+"}}}
+
+" vim-cpp-enhanced-highlight {{{
+    if My_PluginExist("vim-cpp-enhanced-highlight")
+        let g:cpp_class_scope_highlight = 1
+        " let g:cpp_member_variable_highlight = 1
+        let g:cpp_experimental_simple_template_highlight = 1
+        let g:cpp_experimental_template_highlight = 1
+        let g:cpp_concepts_highlight = 1
+        let c_no_curly_error=1 "文件较大时使用下面的设置高亮模板速度较快，但会有一些小错误
+        let g:cpp_class_decl_highlight = 1
+        let g:cpp_my_self_set = 1
+        "166 cterm=bold
+    endif
+"}}}
+
+" cscope {{{
+    if has("cscope")
+        set csprg=/usr/bin/cscope            " 指定用来执行cscope的命令
+        set cscopetag
+        set csto=1                           " 设置cstag命令查找次序：0先找cscope数据库再找标签文件；1先找标签文件再找cscope数据库
+        set cst                              " 同时搜索cscope数据库和标签文件
+        "set cscopequickfix=s+,c+,d-,i-,t-,e- " 使用QuickFix窗口来显示cscope查找结果
+        set nocsverb                         "不显示添加数据库是否成功 "
+        set cspc=0                           "决定了一个文件的路径的多少部分被显示。默认值是0，所以整个路径都会被显示。值为1的话，那么就只会显示文件名, 值为2的话，那么会显示本文件所在文件夹在加文件名，以此类推
+        "set cscopeverbose 
+
+        if filereadable("cscope.out")        " 若当前目录下存在cscope数据库，添加该数据库到vim /home/zxn/cscope/cscope.out
+            cs add cscope.out
+        elseif $CSCOPE_DB != ""              " 否则只要环境变量CSCOPE_DB不为空，则添加其指定的数据库到vim
+            cs add $CSCOPE_DB
+        endif
+        set csverb
+        set nocscopeverbose
+        nmap <C-\>s :cs find s <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>g :cs find g <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>c :cs find c <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>t :cs find t <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>e :cs find e <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>f :cs find f <C-R>=expand("<cfile>")<CR><CR>	
+        nmap <C-\>i :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+        nmap <C-\>d :cs find d <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-\>n :/<C-R>=expand("<cword>")<CR>
+
+        nmap <C-@>s :scs find s <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-@>g :scs find g <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-@>c :scs find c <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-@>t :scs find t <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-@>e :scs find e <C-R>=expand("<cword>")<CR><CR>	
+        nmap <C-@>f :scs find f <C-R>=expand("<cfile>")<CR><CR>	
+        nmap <C-@>i :scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
+        nmap <C-@>d :scs find d <C-R>=expand("<cword>")<CR><CR>	
+
+        nmap <C-@><C-@>s :vert scs find s <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-@><C-@>g :vert scs find g <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-@><C-@>c :vert scs find c <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-@><C-@>t :vert scs find t <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-@><C-@>e :vert scs find e <C-R>=expand("<cword>")<CR><CR>
+        nmap <C-@><C-@>f :vert scs find f <C-R>=expand("<cfile>")<CR><CR>	
+        nmap <C-@><C-@>i :vert scs find i ^<C-R>=expand("<cfile>")<CR>$<CR>	
+        nmap <C-@><C-@>d :vert scs find d <C-R>=expand("<cword>")<CR><CR>
+        noremap <leader>g :cs find g <C-R>=expand("<cword>")<CR><CR>zz
+        noremap <F4> :cs find g <C-R>=expand("<cword>")<CR><CR>zz
+        noremap <leader>t :cs find c <C-R>=expand("<cword>")<CR><CR>zz
+        " nnoremap <C-t> :cs find t <C-R>=expand("<cword>")<CR><CR> 
+        "重新加载ctags cscope
+        " nnoremap <leader>cr :cs reset<CR>
+    endif
+"imap <F4> <ESC>:cs add ./cscope.out .<CR><CR><CR> :cs reset<CR>
+" 将:cs find c等Cscope查找命令映射为<C-_>c等快捷键（按法是先按Ctrl+Shift+-, 然后很快再按下c）
+
+"cscope的主要功能是通过其"find"子命令来实现的
+"cscope find"的用法:
+"cs find c|d|e|f|g|i|s|t name
+"0 或 s  查找这个 C 符号(可以跳过注释)
+"1 或 g  查找这个定义
+"2 或 d  查找这个函数调用的函数
+"3 或 c  查找调用过这个函数的函数
+"4 或 t  查找这个字符串
+"6 或 e  查找这个 egrep 模式
+"7 或 f  查找这个文件
+"8 或 i  查找包含这个文件的文件
+"}}}
+
+
+
+
+
+
+
+
