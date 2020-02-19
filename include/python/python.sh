@@ -2,7 +2,7 @@
 
 # install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel python-devel
 log_info "安装python基础"
-install python-devel python-pip
+install python-devel python-pip zlib zlib-devel libffi-devel
 
 #安装python3
 log_info "安装python3.7"
