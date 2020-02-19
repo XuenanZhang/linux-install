@@ -4,16 +4,13 @@ log_info "更新gcc gcc-++等"
 install gcc gcc-c++ gdb
 
 log_info "安装cmake autoconf等"
-install make cmake autoconf automake clang
-
-intsall git
+install make cmake autoconf automake clang git
 
 #软件扩展包
 # install epel-release
 
 #文件基础颜色
 log_info "配置文件颜色"
-cd ${cache_dir}
 gitdown "seebi/dircolors-solarized"
 mv dircolors-solarized/dircolors.256dark ~/.mycolors
 

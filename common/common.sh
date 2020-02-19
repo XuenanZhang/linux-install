@@ -169,7 +169,7 @@ log_fatal()
 # wget下载文件
 download()
 {
-    cd ${root_dir}/$output
+    cd ${cache_dir}
     # wget $1 2>&1
     wget $1
 }
@@ -177,7 +177,7 @@ download()
 # git下载文件
 gitdown()
 {
-    cd ${root_dir}/${output}
+    cd ${cache_dir}
     if (( $# == 1 ));then
         git clone "https://github.com/${1}" --depth=1
     elif (( $# == 2 ));then
