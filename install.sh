@@ -12,7 +12,8 @@
 #  *******************************************************/
 
 export root_dir=$(pwd)
-export mode_dir=$(pwd)
+export mode_dir=${root_dir}/include
+export cache_dir=${root_dir}/tmp_cache
 
 #需要安装功能列表
 install_list=('base' 'python' 'vim' 'tmux' 'zsh' 'tools')
@@ -20,12 +21,12 @@ install_list=('base' 'python' 'vim' 'tmux' 'zsh' 'tools')
 load_mode()
 {
     local mode=${1}
-    if [ -s ${root_dir}/include/${mode}/${mode}.sh ];then
+    local file_name=${mode_dir}/${mode}/${mode}.sh
+    if [ -s file_name ];then
         log_title "start install ${mode} ..."
-        mode_dir=${root_dir}/include/${mode}
-        . ${mode_dir}/${mode}.sh
+        source ${file_name}
     else
-        log_fatal "${mode}.sh 文件不存在!"        
+        log_fatal "${file_name} 文件不存在!"        
     fi
 }
 
