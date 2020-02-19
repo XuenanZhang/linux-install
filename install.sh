@@ -21,7 +21,8 @@ install_list=('base' 'python' 'vim' 'tmux' 'zsh' 'tools')
 load_mode()
 {
     local mode=${1}
-    local file_name=${mode_dir}/${mode}/${mode}.sh
+    mode_dir=${root_dir}/include/${mode}
+    local file_name=${mode_dir}/${mode}.sh
     if [ -s ${file_name} ];then
         log_title "start install ${mode} ..."
         source ${file_name}
