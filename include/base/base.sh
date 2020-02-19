@@ -13,6 +13,7 @@ intsall git
 
 #文件基础颜色
 log_info "配置文件颜色"
+cd ${cache_dir}
 gitdown "seebi/dircolors-solarized"
 mv dircolors-solarized/dircolors.256dark ~/.mycolors
 
