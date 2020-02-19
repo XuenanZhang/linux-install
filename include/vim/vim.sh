@@ -56,10 +56,15 @@ make all && sudo make install && make check && sudo make package
 
 log_info "安装vim插件"
 cd ${mode_dir}
+if [ -s plug.vim ];then
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+elif
+  mkdir -p ~/.vim/autoload/
+  cp -f plug.vim ~/.vim/autoload/
+fi
 cp -f .vimrc .vimrc.before .vimrc.plugin .agignore .ycm_extra_conf.py ~
 cp -rf .vim ~
 
-curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 #安装插件
 vim -u ~/.vimrc.plugin +PlugInstall +PlugClean! +qall
