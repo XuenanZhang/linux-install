@@ -71,6 +71,10 @@ main()
         printf "${BGreen}Go Go Go Go !!! \n"
         sleep 1s
     }
+    
+    if [ ! -d ${cache_dir} ]
+        mkdir -p ${cache_dir}
+    fi
         
     if (( $# > 0 ));then
         run "$@"
