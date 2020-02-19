@@ -22,7 +22,7 @@ load_mode()
 {
     local mode=${1}
     local file_name=${mode_dir}/${mode}/${mode}.sh
-    if [ -s file_name ];then
+    if [ -s ${file_name} ];then
         log_title "start install ${mode} ..."
         source ${file_name}
     else
@@ -72,7 +72,7 @@ main()
         sleep 1s
     }
     
-    if [ ! -d ${cache_dir} ]
+    if [ ! -d ${cache_dir} ]; then
         mkdir -p ${cache_dir}
     fi
         
