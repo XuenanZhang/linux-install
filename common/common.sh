@@ -170,16 +170,22 @@ log_fatal()
 download()
 {
     cd ${cache_dir}
-    # wget $1 2>&1
-    wget $1
+    local fileName=${1##*/}
+    if [ ! -s ${fileName} ]; then
+    	# wget $1 2>&1
+    	wget $1
+    fi
 }
 
 # git下载文件
 gitdown()
 {
     cd ${cache_dir}
+    local fileName=${1##*/}
     if (( $# == 1 ));then
-        git clone "https://github.com/${1}" --depth=1
+    	if [ ! -s ${fileName} ]; then
+	    git clone "https://github.com/${1}" --depth=1
+    	fi
     elif (( $# == 2 ));then
         git clone "https://github.com/${1}" "${2}" --depth=1
     fi
