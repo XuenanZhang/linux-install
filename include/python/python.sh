@@ -6,10 +6,7 @@ install python-devel zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-d
 
 #安装python3
 log_info "安装python3.7"
-cd ${cache_dir}
-if [ ! -s "Python-3.7.0.tar.xz" ];then
-    download https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz
-fi
+download https://www.python.org/ftp/python/3.7.0/Python-3.7.0.tar.xz
 tar -xvJf  Python-3.7.0.tar.xz
 cd Python-3.7.0
 ./configure --prefix=/usr/local/python3
