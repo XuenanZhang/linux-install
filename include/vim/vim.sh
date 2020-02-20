@@ -56,9 +56,9 @@ make all && sudo make install && make check && sudo make package
 
 log_info "安装vim插件"
 cd ${mode_dir}
-if [ -s plug.vim ];then
+if [ ! -s plug.vim ];then
   curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-elif
+else
   mkdir -p ~/.vim/autoload/
   cp -f plug.vim ~/.vim/autoload/
 fi
